@@ -1,9 +1,6 @@
 package fun.mortnon.wj.service;
 
 import fun.mortnon.wj.model.WjAccessTokenResponse;
-import fun.mortnon.wj.model.WjBaseResponse;
-
-import java.util.Map;
 
 /**
  * 腾讯问卷基础服务
