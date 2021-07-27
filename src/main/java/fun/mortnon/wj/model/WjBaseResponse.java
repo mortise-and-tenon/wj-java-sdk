@@ -16,8 +16,8 @@ public class WjBaseResponse implements Serializable {
     private static final long serialVersionUID = 6861752766183024694L;
 
     /** 错误码 */
-    public ErrorCode code;
+    protected ErrorCode code;
 
     /** 错误信息 */
-    public Error error;
+    protected Error error;
 }
