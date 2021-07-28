@@ -21,7 +21,7 @@ public class RequestContent {
     private String url;
 
     /** 请求参数 */
-    private Map<String, String> param;
+    private Map<String, Object> param;
 
     /** 结果 */
     private String result;

@@ -1,5 +1,6 @@
 package fun.mortnon.wj.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -20,4 +21,8 @@ public class WjBaseResponse implements Serializable {
 
     /** 错误信息 */
     protected Error error;
+
+    /** 请求id */
+    @JsonProperty("request_id")
+    private String requestId;
 }

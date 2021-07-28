@@ -1,5 +1,6 @@
 package fun.mortnon.wj.service;
 
+import fun.mortnon.wj.model.AccessToken;
 import fun.mortnon.wj.model.WjAccessTokenResponse;
 
 /**
@@ -37,5 +38,19 @@ public interface WjService {
      * @param grantType 固定为 client_credential
      * @return          返回结果
      */
-    WjAccessTokenResponse accessToken(String appId, String secret, String grantType);
+    AccessToken accessToken(String appId, String secret, String grantType);
+
+    /**
+     * 获取token
+     *
+     * @return token
+     */
+    String getAccessToken();
+
+    /**
+     * 获取问卷管理服务
+     *
+     * @return 问卷管理服务
+     */
+    WjManageService getWjManageService();
 }

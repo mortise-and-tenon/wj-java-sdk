@@ -6,13 +6,13 @@ import lombok.experimental.Accessors;
 
 /**
  * @author dongfangzan
- * @date 27.7.21 11:16 上午
+ * @date 28.7.21 10:18 上午
  */
 @Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
-public class WjAccessTokenResponse extends WjBaseResponse{
+public class WjSurveyResponse extends WjBaseResponse{
 
-    /** Token */
-    private AccessToken data;
+    /** 数据 */
+    private WjPage<Survey> data;
 }

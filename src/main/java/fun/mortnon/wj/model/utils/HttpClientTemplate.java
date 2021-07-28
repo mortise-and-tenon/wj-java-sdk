@@ -2,6 +2,7 @@ package fun.mortnon.wj.model.utils;
 
 import fun.mortnon.wj.constants.WjApiConstants;
 import fun.mortnon.wj.exception.WjException;
+import fun.mortnon.wj.model.AccessToken;
 import fun.mortnon.wj.model.ErrorCode;
 import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.model.WjBaseResponse;
@@ -16,6 +17,7 @@ import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -35,18 +37,44 @@ public class HttpClientTemplate {
      * @return               响应结果
      */
     public static WjBaseResponse doGet(RequestContent requestContent, Supplier<? extends WjBaseResponse> handler) {
+        return doGetWithToken(requestContent, null, handler);
+    }
+
+    /**
+     * 带token的get请求
+     *
+     * @param requestContent 请求上下文
+     * @param token          token
+     * @param handler        结果处理器
+     * @return               返回结果
+     */
+    public static WjBaseResponse doGetWithToken(RequestContent requestContent, String token, Supplier<? extends  WjBaseResponse> handler) {
         long time = System.currentTimeMillis();
-        Map<String, String> params = requestContent.getParam();
+        Map<String, Object> params = requestContent.getParam();
+        if (StringUtils.isNotBlank(token)) {
+            // token 不为空，写token
+            if (null == params || 0 == params.size()) {
+                params = new HashMap<>(1);
+            }
+
+            params.put("access_token", token);
+        }
+
         String url = buildGetUrlWithParams(WjApiConstants.DOMAIN_NAME + requestContent.getUrl(), params);
 
+        long timeClient = System.currentTimeMillis();
         CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
+
+        log.info("创建httpClient耗时：{}ms", System.currentTimeMillis() - timeClient);
         HttpGet httpGet = new HttpGet(url);
 
         CloseableHttpResponse response = null;
         try {
             httpGet.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
 
+            long execTime = System.currentTimeMillis();
             response = closeableHttpClient.execute(httpGet);
+            log.info("调用耗时：{}ms", System.currentTimeMillis() - execTime);
 
             HttpEntity httpEntity = response.getEntity();
 
@@ -61,7 +89,10 @@ public class HttpClientTemplate {
 
             requestContent.setResult(result);
 
-            return handler.get();
+            long handleTime = System.currentTimeMillis();
+            WjBaseResponse wjBaseResponse = handler.get();
+            log.info("处理响应体耗时：{}ms", System.currentTimeMillis() - handleTime);
+            return wjBaseResponse;
         } catch (WjException e) {
             log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw e;
@@ -69,6 +100,7 @@ public class HttpClientTemplate {
             log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw new WjException(ErrorCode.RemoteServerError, null, e.getMessage());
         } finally {
+            long closeTime = System.currentTimeMillis();
             try {
                 // 释放资源
                 if (closeableHttpClient != null) {
@@ -80,6 +112,7 @@ public class HttpClientTemplate {
             } catch (IOException e) {
                 log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             }
+            log.info("关闭请求耗时：{}ms", System.currentTimeMillis() - closeTime);
 
             log.info("调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
         }
@@ -97,7 +130,7 @@ public class HttpClientTemplate {
      * @param params 参数
      * @return       拼接好的url
      */
-    private static String buildGetUrlWithParams(String url, Map<String, String> params) {
+    private static String buildGetUrlWithParams(String url, Map<String, Object> params) {
         if (Objects.isNull(params) || 0 == params.size()) {
             return url;
         }
