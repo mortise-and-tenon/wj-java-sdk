@@ -33,7 +33,7 @@ public class WjApiTest {
         WjService wjService = new WjServiceImpl(wjStorageConfig, "", "");
         WjManageService wjManageService = wjService.getWjManageService();
 
-        WjPage<Survey> surveyWjPage = wjManageService.listSurvey(null, null, 1, 20);
+        WjPage<Survey> surveyWjPage = wjManageService.listSurvey(60007372856L, null, 1, 20);
         System.out.println(JacksonUtil.objectToJson(surveyWjPage));
     }
 }

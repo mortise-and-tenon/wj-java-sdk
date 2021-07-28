@@ -32,7 +32,7 @@ public class WjManageServiceImpl implements WjManageService {
         AssertUtils.nonNull(page, ErrorCode.InvalidArgument, "页码不能为空");
         AssertUtils.nonNull(perPage, ErrorCode.InvalidArgument, "每页数量不能为空");
 
-        Map<String, Object> params = new HashMap<>(4);
+        Map<String, Object> params = new HashMap<>(8);
         if (Objects.nonNull(userId)) {
             params.put("user_id", userId);
         }
@@ -48,9 +48,7 @@ public class WjManageServiceImpl implements WjManageService {
         requestContent.setParam(params);
         requestContent.setUrl(WjApiConstants.SURVEYS);
 
-        String token = wjService.getAccessToken();
-
-        WjSurveyResponse wjSurveyResponse = (WjSurveyResponse) HttpClientTemplate.doGetWithToken(requestContent, token,
+        WjSurveyResponse wjSurveyResponse = (WjSurveyResponse) wjService.doGetWithToken(requestContent,
                 () -> JacksonUtil.jsonToObject(requestContent.getResult(), WjSurveyResponse.class));
         return wjSurveyResponse.getData();
     }

@@ -1,7 +1,12 @@
 package fun.mortnon.wj.service;
 
 import fun.mortnon.wj.model.AccessToken;
+import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.model.WjAccessTokenResponse;
+import fun.mortnon.wj.model.WjBaseResponse;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * 腾讯问卷基础服务
@@ -11,14 +16,24 @@ import fun.mortnon.wj.model.WjAccessTokenResponse;
  */
 public interface WjService {
 
-//    /**
-//     * get请求
-//     *
-//     * @param url    地址
-//     * @param params 参数
-//     * @return       返回值
-//     */
-//    String doGet(String url, Map<String, String> params);
+    /**
+     * get请求
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回值
+     */
+    WjBaseResponse doGet(RequestContent requestContent, Supplier<WjBaseResponse> handler);
+
+
+    /**
+     * get请求，带token
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回结果
+     */
+    WjBaseResponse doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse> handler);
 //
 //
 //    /**

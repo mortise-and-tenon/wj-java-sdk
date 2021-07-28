@@ -1,10 +1,7 @@
 package fun.mortnon.wj.service.impl;
 
 import fun.mortnon.wj.constants.WjApiConstants;
-import fun.mortnon.wj.model.AccessToken;
-import fun.mortnon.wj.model.ErrorCode;
-import fun.mortnon.wj.model.RequestContent;
-import fun.mortnon.wj.model.WjAccessTokenResponse;
+import fun.mortnon.wj.model.*;
 import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.HttpClientTemplate;
 import fun.mortnon.wj.model.utils.JacksonUtil;
@@ -17,6 +14,7 @@ import lombok.Setter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * 问卷基本服务
@@ -54,6 +52,25 @@ public class WjServiceImpl implements WjService {
     }
 
     @Override
+    public WjBaseResponse doGet(RequestContent requestContent, Supplier<WjBaseResponse> handler) {
+        requestContent.setUrl(WjApiConstants.DOMAIN_NAME + requestContent.getUrl());
+        return HttpClientTemplate.doGet(requestContent, handler);
+    }
+
+    @Override
+    public WjBaseResponse doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse> handler) {
+        Map<String, Object> params = requestContent.getParam();
+        if (Objects.isNull(params) || 0 == params.size()) {
+            params = new HashMap<>(2);
+        }
+
+        params.put("appid", appId);
+        params.put("access_token", getAccessToken());
+
+        return doGet(requestContent, handler);
+    }
+
+    @Override
     public AccessToken accessToken(String appId, String secret, String grantType) {
         Map<String, Object> params = new HashMap<>(3);
         params.put("appid", appId);
@@ -62,7 +79,7 @@ public class WjServiceImpl implements WjService {
 
         RequestContent requestContent = new RequestContent(WjApiConstants.OAUTH_ACCESS_TOKEN, params, null);
 
-        WjAccessTokenResponse response = (WjAccessTokenResponse) HttpClientTemplate.doGet(requestContent, () -> {
+        WjAccessTokenResponse response = (WjAccessTokenResponse) doGet(requestContent, () -> {
             String result = requestContent.getResult();
             WjAccessTokenResponse wjAccessTokenResponse = JacksonUtil.jsonToObject(result, WjAccessTokenResponse.class);
             AssertUtils.isEquals(ErrorCode.OK, wjAccessTokenResponse.getCode(),

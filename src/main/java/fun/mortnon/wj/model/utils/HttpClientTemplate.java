@@ -60,7 +60,7 @@ public class HttpClientTemplate {
             params.put("access_token", token);
         }
 
-        String url = buildGetUrlWithParams(WjApiConstants.DOMAIN_NAME + requestContent.getUrl(), params);
+        String url = buildGetUrlWithParams(requestContent.getUrl(), params);
 
         long timeClient = System.currentTimeMillis();
         CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
@@ -88,6 +88,10 @@ public class HttpClientTemplate {
             log.info("调用地址：「{}」正常，返回结果：「{}」", url, result);
 
             requestContent.setResult(result);
+
+            WjBaseResponse baseResponse = JacksonUtil.jsonToObject(result, WjBaseResponse.class);
+            AssertUtils.nonNull(baseResponse, ErrorCode.RemoteServerError, "远端服务器未返回消息");
+            AssertUtils.isEquals(ErrorCode.OK, baseResponse.getCode(), baseResponse.getCode(), baseResponse.getError(), baseResponse.getCode().getDesc());
 
             long handleTime = System.currentTimeMillis();
             WjBaseResponse wjBaseResponse = handler.get();
