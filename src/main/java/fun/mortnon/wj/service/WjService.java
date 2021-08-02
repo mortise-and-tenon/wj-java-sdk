@@ -75,4 +75,11 @@ public interface WjService {
      * @return 问卷管理服务
      */
     WjManageService getWjManageService();
+
+    /**
+     * 获取团队通讯录管理服务
+     *
+     * @return 团队通讯录管理服务
+     */
+    WjAddressListService getWjAddressListService();
 }
