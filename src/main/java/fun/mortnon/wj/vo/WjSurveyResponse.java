@@ -1,5 +1,7 @@
-package fun.mortnon.wj.model;
+package fun.mortnon.wj.vo;
 
+import fun.mortnon.wj.model.Survey;
+import fun.mortnon.wj.model.WjPage;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

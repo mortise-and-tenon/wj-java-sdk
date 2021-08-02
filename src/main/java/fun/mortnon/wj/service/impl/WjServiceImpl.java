@@ -1,13 +1,18 @@
 package fun.mortnon.wj.service.impl;
 
 import fun.mortnon.wj.constants.WjApiConstants;
-import fun.mortnon.wj.model.*;
+import fun.mortnon.wj.model.AccessToken;
+import fun.mortnon.wj.model.ErrorCode;
+import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.HttpClientTemplate;
 import fun.mortnon.wj.model.utils.JacksonUtil;
+import fun.mortnon.wj.service.WjAddressListService;
 import fun.mortnon.wj.service.WjManageService;
 import fun.mortnon.wj.service.WjService;
 import fun.mortnon.wj.service.WjStorageConfig;
+import fun.mortnon.wj.vo.WjAccessTokenResponse;
+import fun.mortnon.wj.vo.WjBaseResponse;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -42,6 +47,10 @@ public class WjServiceImpl implements WjService {
     @Setter
     private WjManageService wjManageService = new WjManageServiceImpl(this);
 
+    @Getter
+    @Setter
+    private WjAddressListService wjAddressListService = new WjAddressListServiceImpl(this);
+
     public WjServiceImpl(WjStorageConfig wjStorageConfig, String appId, String secret) {
         this.wjStorageConfig = wjStorageConfig;
         this.appId = appId;
@@ -52,13 +61,13 @@ public class WjServiceImpl implements WjService {
     }
 
     @Override
-    public WjBaseResponse doGet(RequestContent requestContent, Supplier<WjBaseResponse> handler) {
+    public <T> WjBaseResponse<T> doGet(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
         requestContent.setUrl(WjApiConstants.DOMAIN_NAME + requestContent.getUrl());
         return HttpClientTemplate.doGet(requestContent, handler);
     }
 
     @Override
-    public WjBaseResponse doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse> handler) {
+    public <T> WjBaseResponse<T> doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
         Map<String, Object> params = requestContent.getParam();
         if (Objects.isNull(params) || 0 == params.size()) {
             params = new HashMap<>(2);
@@ -68,6 +77,25 @@ public class WjServiceImpl implements WjService {
         params.put("access_token", getAccessToken());
 
         return doGet(requestContent, handler);
+    }
+
+    @Override
+    public <T> WjBaseResponse<T> doPost(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
+        requestContent.setUrl(WjApiConstants.DOMAIN_NAME + requestContent.getUrl());
+        return HttpClientTemplate.doPost(requestContent, handler);
+    }
+
+    @Override
+    public <T> WjBaseResponse<T> doPostWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
+        Map<String, Object> params = requestContent.getParam();
+        if (Objects.isNull(params) || 0 == params.size()) {
+            params = new HashMap<>(2);
+        }
+
+        params.put("appid", appId);
+        params.put("access_token", getAccessToken());
+
+        return doPost(requestContent, handler);
     }
 
     @Override

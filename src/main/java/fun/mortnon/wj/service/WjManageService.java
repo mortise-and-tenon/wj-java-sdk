@@ -1,7 +1,6 @@
 package fun.mortnon.wj.service;
 
-import fun.mortnon.wj.model.Survey;
-import fun.mortnon.wj.model.WjPage;
+import fun.mortnon.wj.model.*;
 
 /**
  * 问卷管理
@@ -22,4 +21,34 @@ public interface WjManageService {
      * @return        用户问卷列表
      */
     WjPage<Survey> listSurvey(Long userId, String openId, Integer page, Integer perPage);
+
+    /**
+     * 获取问卷详情
+     * @link {https://wj.qq.com/docs/openapi/survey/get_survey}
+     *
+     *
+     * @param surveyId 问卷ID，示例值：292192
+     * @return         问卷详情
+     */
+    SurveyDetail getSurveyDetail(Long surveyId);
+
+    /**
+     * 获取问卷的回答列表
+     * @link {https://wj.qq.com/docs/openapi/survey/list_answer/}
+     *
+     * @param surveyId     问卷ID
+     * @param perPage      每页显示条数
+     * @param lastAnswerId 下页开始ID
+     * @return             问卷的回答列表
+     */
+    WjPage<Answer> listAnswer(Long surveyId, Integer perPage, Long lastAnswerId);
+
+    /**
+     * 获取回答详情
+     *
+     * @param surveyId 问卷ID
+     * @param answerId 答案ID
+     * @return         回答详情
+     */
+    AnswerDetail getAnswerDetail(Long surveyId, Long answerId);
 }

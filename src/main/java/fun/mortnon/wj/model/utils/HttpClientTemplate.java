@@ -1,11 +1,9 @@
 package fun.mortnon.wj.model.utils;
 
-import fun.mortnon.wj.constants.WjApiConstants;
 import fun.mortnon.wj.exception.WjException;
-import fun.mortnon.wj.model.AccessToken;
 import fun.mortnon.wj.model.ErrorCode;
 import fun.mortnon.wj.model.RequestContent;
-import fun.mortnon.wj.model.WjBaseResponse;
+import fun.mortnon.wj.vo.WjBaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -36,7 +34,7 @@ public class HttpClientTemplate {
      * @param handler        响应体处理器
      * @return               响应结果
      */
-    public static WjBaseResponse doGet(RequestContent requestContent, Supplier<? extends WjBaseResponse> handler) {
+    public static <T> WjBaseResponse<T> doGet(RequestContent requestContent, Supplier<? extends WjBaseResponse<T>> handler) {
         return doGetWithToken(requestContent, null, handler);
     }
 
@@ -48,7 +46,7 @@ public class HttpClientTemplate {
      * @param handler        结果处理器
      * @return               返回结果
      */
-    public static WjBaseResponse doGetWithToken(RequestContent requestContent, String token, Supplier<? extends  WjBaseResponse> handler) {
+    public static <T> WjBaseResponse<T> doGetWithToken(RequestContent requestContent, String token, Supplier<? extends  WjBaseResponse<T>> handler) {
         long time = System.currentTimeMillis();
         Map<String, Object> params = requestContent.getParam();
         if (StringUtils.isNotBlank(token)) {
@@ -122,7 +120,7 @@ public class HttpClientTemplate {
         }
     }
 
-    public static WjBaseResponse doPost(RequestContent requestContent, Supplier<? extends WjBaseResponse> handler) {
+    public static <T> WjBaseResponse<T> doPost(RequestContent requestContent, Supplier<? extends WjBaseResponse<T>> handler) {
 
         return handler.get();
     }

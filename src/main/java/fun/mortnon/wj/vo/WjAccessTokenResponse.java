@@ -1,5 +1,6 @@
-package fun.mortnon.wj.model;
+package fun.mortnon.wj.vo;
 
+import fun.mortnon.wj.model.AccessToken;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;

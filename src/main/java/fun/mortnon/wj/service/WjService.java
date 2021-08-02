@@ -2,10 +2,8 @@ package fun.mortnon.wj.service;
 
 import fun.mortnon.wj.model.AccessToken;
 import fun.mortnon.wj.model.RequestContent;
-import fun.mortnon.wj.model.WjAccessTokenResponse;
-import fun.mortnon.wj.model.WjBaseResponse;
+import fun.mortnon.wj.vo.WjBaseResponse;
 
-import java.util.Map;
 import java.util.function.Supplier;
 
 /**
@@ -23,7 +21,7 @@ public interface WjService {
      * @param handler        响应体处理器
      * @return               返回值
      */
-    WjBaseResponse doGet(RequestContent requestContent, Supplier<WjBaseResponse> handler);
+    <T> WjBaseResponse<T>  doGet(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
 
 
     /**
@@ -33,17 +31,26 @@ public interface WjService {
      * @param handler        响应体处理器
      * @return               返回结果
      */
-    WjBaseResponse doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse> handler);
-//
-//
-//    /**
-//     * post请求
-//     *
-//     * @param url    地址
-//     * @param params 参数
-//     * @return       返回值
-//     */
-//    String doPost(String url, Map<String, String> params);
+    <T> WjBaseResponse<T> doGetWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
+
+
+    /**
+     * post请求
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回结果
+     */
+    <T> WjBaseResponse<T>  doPost(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
+
+    /**
+     * post请求
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回结果
+     */
+    <T> WjBaseResponse<T>  doPostWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
 
     /**
      * 获取accessToken

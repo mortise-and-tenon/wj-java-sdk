@@ -3,6 +3,8 @@ package fun.mortnon.wj.model;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.io.Serializable;
+
 /**
  * 问卷摘要数据
  *
@@ -11,10 +13,15 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-public class Survey {
-    private Long id;
+public class Survey implements Serializable {
+    private static final long serialVersionUID = 8940123464836843109L;
 
-    private String hash;
+    /** 编号 */
+    protected Long id;
 
-    private String title;
+    /** 哈希 */
+    protected String hash;
+
+    /** 标题 */
+    protected String title;
 }

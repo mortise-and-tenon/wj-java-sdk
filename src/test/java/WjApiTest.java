@@ -1,7 +1,6 @@
 import fun.mortnon.wj.exception.WjException;
 import fun.mortnon.wj.model.AccessToken;
 import fun.mortnon.wj.model.Survey;
-import fun.mortnon.wj.model.WjAccessTokenResponse;
 import fun.mortnon.wj.model.WjPage;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjManageService;
