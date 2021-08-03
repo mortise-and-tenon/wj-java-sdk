@@ -7,10 +7,7 @@ import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.HttpClientTemplate;
 import fun.mortnon.wj.model.utils.JacksonUtil;
-import fun.mortnon.wj.service.WjAddressListService;
-import fun.mortnon.wj.service.WjManageService;
-import fun.mortnon.wj.service.WjService;
-import fun.mortnon.wj.service.WjStorageConfig;
+import fun.mortnon.wj.service.*;
 import fun.mortnon.wj.vo.WjAccessTokenResponse;
 import fun.mortnon.wj.vo.WjBaseResponse;
 import lombok.Getter;
@@ -51,6 +48,10 @@ public class WjServiceImpl implements WjService {
     @Setter
     private WjAddressListService wjAddressListService = new WjAddressListServiceImpl(this);
 
+    @Getter
+    @Setter
+    private WjDataService wjDataService = new WjDataServiceImpl(this);
+
     public WjServiceImpl(WjStorageConfig wjStorageConfig, String appId, String secret) {
         this.wjStorageConfig = wjStorageConfig;
         this.appId = appId;
@@ -85,6 +86,25 @@ public class WjServiceImpl implements WjService {
     public <T> WjBaseResponse<T> doPost(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
         requestContent.setUrl(WjApiConstants.DOMAIN_NAME + requestContent.getUrl());
         return HttpClientTemplate.doPost(requestContent, handler);
+    }
+
+    @Override
+    public <T> WjBaseResponse<T> doDeleteWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
+        Map<String, Object> params = requestContent.getParam();
+        if (Objects.isNull(params) || 0 == params.size()) {
+            params = new HashMap<>(2);
+        }
+
+        params.put("appid", appId);
+        params.put("access_token", getAccessToken());
+
+        return doDelete(requestContent, handler);
+    }
+
+    @Override
+    public <T> WjBaseResponse<T> doDelete(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler) {
+        requestContent.setUrl(WjApiConstants.DOMAIN_NAME + requestContent.getUrl());
+        return HttpClientTemplate.doDelete(requestContent, handler);
     }
 
     @Override

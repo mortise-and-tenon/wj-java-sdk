@@ -46,4 +46,30 @@ public class WjApiConstants {
     /** 新建分组 */
     public final static String CREATE_TEAM_GROUP = "/api/contacts/teams/%s/groups";
 
+    //数据推送管理
+    /**
+     * 获取 Webhook 列表
+     */
+    public final static String LIST_WEBHOOKS = "/api/surveys/%s/webhooks";
+
+    /**
+     * 获取 Webhook 详情
+     */
+    public final static String GET_WEBHOOK = "/api/surveys/%s/webhooks/%s";
+
+    /**
+     * 创建 Webhook
+     */
+    public final static String CREATE_WEBHOOK = LIST_WEBHOOKS;
+
+    /**
+     * 修改 Webhook
+     */
+    public final static String MODIFY_WEBHOOK = GET_WEBHOOK;
+
+    /**
+     * 删除 Webhook
+     */
+    public final static String DELETE_WEBHOOK = GET_WEBHOOK;
+
 }
