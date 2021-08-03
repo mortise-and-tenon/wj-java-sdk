@@ -82,4 +82,29 @@ public interface WjService {
      * @return 团队通讯录管理服务
      */
     WjAddressListService getWjAddressListService();
+
+    /**
+     * 获取数据推送管理服务
+     * @return
+     */
+    WjDataService getWjDataService();
+
+    /**
+     * delete 请求
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回结果
+     */
+    <T> WjBaseResponse<T>  doDeleteWithToken(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
+
+    /**
+     * delete 请求
+     *
+     * @param requestContent 请求上下文
+     * @param handler        响应体处理器
+     * @return               返回结果
+     */
+    <T> WjBaseResponse<T>  doDelete(RequestContent requestContent, Supplier<WjBaseResponse<T>> handler);
+
 }
