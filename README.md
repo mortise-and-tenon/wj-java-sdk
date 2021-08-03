@@ -11,15 +11,15 @@
 ```
 4. 代码如下
 ```java
-    WjStorageConfig wjStorageConfig = new WjDefaultStorageConfigImpl();
-    wjService = new WjServiceImpl(wjStorageConfig, APP_ID, SECRET);
+WjStorageConfig wjStorageConfig = new WjDefaultStorageConfigImpl();
+wjService = new WjServiceImpl(wjStorageConfig, APP_ID, SECRET);
     
-    // 获取accessToken，测试用，项目中不需要手动获取token
-    AccessToken accessToken = wjService.accessToken(APP_ID, SECRET, null);
+// 获取accessToken，测试用，项目中不需要手动获取token
+AccessToken accessToken = wjService.accessToken(APP_ID, SECRET, null);
 
-    // 获取问卷列表    
-    WjManageService wjManageService = wjService.getWjManageService();
-    WjPage<Survey> surveyWjPage = wjManageService.listSurvey(USER_ID, null, 1, 20);
+// 获取问卷列表    
+WjManageService wjManageService = wjService.getWjManageService();
+WjPage<Survey> surveyWjPage = wjManageService.listSurvey(USER_ID, null, 1, 20);
     
-    // 其他接口可自行查看
+// 其他接口可自行查看
 ```
