@@ -14,7 +14,7 @@
     WjStorageConfig wjStorageConfig = new WjDefaultStorageConfigImpl();
     wjService = new WjServiceImpl(wjStorageConfig, APP_ID, SECRET);
     
-    // 获取accessToken，测试用
+    // 获取accessToken，测试用，项目中不需要手动获取token
     AccessToken accessToken = wjService.accessToken(APP_ID, SECRET, null);
 
     // 获取问卷列表    
