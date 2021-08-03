@@ -90,7 +90,6 @@ public interface WjAddressListService {
      *
      * @param teamId   企业ID
      * @param groupIds 分组id列表
-     * @return         删除的分组id
      */
     void deleteGroup(Long teamId, List<Long> groupIds);
 }
