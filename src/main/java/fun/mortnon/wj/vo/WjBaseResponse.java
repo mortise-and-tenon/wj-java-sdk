@@ -9,6 +9,8 @@ import lombok.experimental.Accessors;
 import java.io.Serializable;
 
 /**
+ * 问卷响应体
+ *
  * @author dongfangzan
  * @date 27.7.21 10:26 上午
  */
@@ -28,5 +30,6 @@ public class WjBaseResponse<T> implements Serializable {
     @JsonProperty("request_id")
     private String requestId;
 
+    /** 数据 */
     private T data;
 }
