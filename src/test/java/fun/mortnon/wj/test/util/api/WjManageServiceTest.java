@@ -48,6 +48,6 @@ public class WjManageServiceTest {
         WjManageService wjManageService = wjService.getWjManageService();
         SurveyDetail surveyDetail = wjManageService.getSurveyDetail(8827032L);
 
-        System.out.println(JacksonUtil.objectToJson(surveyDetail));
+        System.out.println("输出结果：" + JacksonUtil.objectToJson(surveyDetail));
     }
 }

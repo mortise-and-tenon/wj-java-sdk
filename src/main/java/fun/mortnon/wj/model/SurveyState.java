@@ -1,5 +1,10 @@
 package fun.mortnon.wj.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Getter;
+
+import java.util.Arrays;
+
 /**
  * 问卷状态枚举
  *
@@ -11,9 +16,7 @@ public enum SurveyState {
     RECYCLING(2, "回收中"),
 
     /** 暂停回收 */
-    STOP_RECYCLE(3, "暂停回收")
-
-    ;
+    STOP_RECYCLE(3, "暂停回收");
 
 
     SurveyState(int state, String desc) {
@@ -21,7 +24,23 @@ public enum SurveyState {
         this.desc = desc;
     }
 
-    private int state;
+    /**
+     * 根据状态码获取枚举
+     *
+     * @param state 状态码
+     * @return      枚举
+     */
+    @JsonCreator
+    public static SurveyState getByState(int state) {
+        return Arrays.stream(SurveyState.values()).filter(surveyState -> state == surveyState.state)
+                .findAny().orElse(null);
+    }
 
-    private String desc;
+    /** 状态码 */
+    @Getter
+    private final int state;
+
+    /** 描述字段 */
+    @Getter
+    private final String desc;
 }

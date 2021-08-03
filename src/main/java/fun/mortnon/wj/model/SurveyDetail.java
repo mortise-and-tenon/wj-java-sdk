@@ -100,6 +100,9 @@ public class SurveyDetail extends Survey{
     @JsonProperty("is_access_survey")
     private boolean isAccessSurvey;
 
+    /** 文档未描述字段 */
+    private String callback;
+
     @Data
     @Accessors(chain = true)
     public static class Page {

@@ -1,5 +1,10 @@
 package fun.mortnon.wj.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import lombok.Getter;
+
+import java.util.Arrays;
+
 /**
  * @author dongfangzan
  * @date 31.7.21 4:38 下午
@@ -18,7 +23,23 @@ public enum SurveyType {
         this.desc = desc;
     }
 
-    private int type;
+    /**
+     * 根据类型码获取枚举
+     *
+     * @param type 类型码
+     * @return     枚举
+     */
+    @JsonCreator
+    public static SurveyType getByType(int type) {
+        return Arrays.stream(SurveyType.values()).filter(surveyType -> type == surveyType.type)
+                .findAny().orElse(null);
+    }
 
-    private String desc;
+    /** 类型码 */
+    @Getter
+    private final int type;
+
+    /** 描述字段 */
+    @Getter
+    private final String desc;
 }
