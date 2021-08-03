@@ -44,6 +44,14 @@ public class WjApiConstants {
     public final static String LIST_GROUP = "/api/contacts/teams/%s/groups";
 
     /** 新建分组 */
-    public final static String CREATE_TEAM_GROUP = "/api/contacts/teams/%s/groups";
+    public final static String CREATE_GROUP = "/api/contacts/teams/%s/groups";
+
+    /** 修改分组 */
+    public final static String UPDATE_GROUP = "/api/contacts/teams/%s/groups/%s";
+
+    /** 删除分组 */
+    public final static String BATCHE_DELETE_GROUP = "/api/contacts/teams/%s/groups/batch_delete";
+
+
 
 }

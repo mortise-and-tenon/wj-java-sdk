@@ -7,7 +7,7 @@ import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjAddressListService;
 import fun.mortnon.wj.service.WjService;
-import fun.mortnon.wj.vo.CreateTeamGroupResult;
+import fun.mortnon.wj.vo.CreateGroupResult;
 import fun.mortnon.wj.vo.WjBaseResponse;
 
 import java.util.HashMap;
@@ -67,7 +67,7 @@ public class WjAddressListServiceImpl implements WjAddressListService {
     }
 
     @Override
-    public WjPage<TeamGroup> listTeamGroup(Long teamId, Integer page, Integer perPage, List<String> remoteIds, Long parentId) {
+    public WjPage<Group> listGroup(Long teamId, Integer page, Integer perPage, List<String> remoteIds, Long parentId) {
         AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
         AssertUtils.nonNull(page, ErrorCode.InvalidArgument, "页码不能为空");
         AssertUtils.nonNull(perPage, ErrorCode.InvalidArgument, "每页数量不能为空");
@@ -85,14 +85,14 @@ public class WjAddressListServiceImpl implements WjAddressListService {
 
         RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.LIST_GROUP, teamId.toString()))
                 .setParam(params);
-        WjBaseResponse<WjPage<TeamGroup>> response = wjService.doGetWithToken(requestContent, () ->
-                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<WjPage<TeamGroup>>>() {
+        WjBaseResponse<WjPage<Group>> response = wjService.doGetWithToken(requestContent, () ->
+                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<WjPage<Group>>>() {
                 }));
         return response.getData();
     }
 
     @Override
-    public CreateTeamGroupResult createTeamGroup(String name, Long parentId, Integer order, String remoteId, Long teamId) {
+    public CreateGroupResult createGroup(String name, Long parentId, Integer order, String remoteId, Long teamId) {
         AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
         AssertUtils.notBlank(name, ErrorCode.InvalidArgument, "分组名称不能为空");
 
@@ -112,11 +112,37 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         }
 
 
-        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.CREATE_TEAM_GROUP, teamId))
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.CREATE_GROUP, teamId))
                 .setFormBody(formBody);
-        WjBaseResponse<CreateTeamGroupResult> createTeamGroupResultWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
-                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<CreateTeamGroupResult>>() {
+        WjBaseResponse<CreateGroupResult> createTeamGroupResultWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
+                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<CreateGroupResult>>() {
                 }));
         return createTeamGroupResultWjBaseResponse.getData();
+    }
+
+    @Override
+    public void updateGroup(Long teamId, Long groupId, String name, Integer order, Long fromId, Long toId) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.nonNull(groupId, ErrorCode.InvalidArgument, "分组ID不能为空");
+        AssertUtils.notBlank(name, ErrorCode.InvalidArgument, "分组名称不能为空");
+        Map<String, Object> formBody = new HashMap<>();
+        formBody.put("name", name);
+
+        if (Objects.nonNull(order)) {
+            formBody.put("order", order);
+        }
+
+        if (Objects.nonNull(fromId)) {
+            formBody.put("from_id", fromId);
+        }
+
+        if (Objects.nonNull(toId)) {
+            formBody.put("to_id", toId);
+        }
+
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.UPDATE_GROUP, teamId, groupId))
+                .setFormBody(formBody);
+
+        wjService.doPostWithToken(requestContent, () -> null);
     }
 }

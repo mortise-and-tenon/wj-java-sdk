@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors
-public class CreateTeamGroupResult implements Serializable {
+public class CreateGroupResult implements Serializable {
 
     private static final long serialVersionUID = 1824768975665139164L;
 

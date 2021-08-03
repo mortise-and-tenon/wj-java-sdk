@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class TeamGroup implements Serializable {
+public class Group implements Serializable {
     private static final long serialVersionUID = 3947564684497700565L;
 
     /** 分组ID */

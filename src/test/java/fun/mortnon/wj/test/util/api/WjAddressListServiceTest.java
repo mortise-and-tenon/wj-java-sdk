@@ -2,7 +2,7 @@ package fun.mortnon.wj.test.util.api;
 
 import fun.mortnon.wj.model.Org;
 import fun.mortnon.wj.model.OrgUser;
-import fun.mortnon.wj.model.TeamGroup;
+import fun.mortnon.wj.model.Group;
 import fun.mortnon.wj.model.WjPage;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjAddressListService;
@@ -10,7 +10,7 @@ import fun.mortnon.wj.service.WjService;
 import fun.mortnon.wj.service.WjStorageConfig;
 import fun.mortnon.wj.service.impl.WjDefaultStorageConfigImpl;
 import fun.mortnon.wj.service.impl.WjServiceImpl;
-import fun.mortnon.wj.vo.CreateTeamGroupResult;
+import fun.mortnon.wj.vo.CreateGroupResult;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -61,14 +61,21 @@ public class WjAddressListServiceTest {
     }
 
     @Test
-    public void testListTeamGroup() {
-        WjPage<TeamGroup> teamGroupWjPage = wjAddressListService.listTeamGroup(28042L, 1, 20, null, null);
+    public void testListGroup() {
+        WjPage<Group> teamGroupWjPage = wjAddressListService.listGroup(28042L, 1, 20, null, null);
         System.out.println(JacksonUtil.objectToJson(teamGroupWjPage));
     }
 
     @Test
-    public void testCreateTeamGroup() {
-        CreateTeamGroupResult testGroup = wjAddressListService.createTeamGroup("测试分组", 0L, 1, "1234", 28042L);
+    public void testCreateGroup() {
+        CreateGroupResult testGroup = wjAddressListService.createGroup("测试分组", 0L, 1, "1234", 28042L);
         System.out.println(JacksonUtil.objectToJson(testGroup));
+    }
+
+    @Test
+    public void testUpdateGroup() {
+        wjAddressListService.updateGroup(28042L, 948153L, "测试分组2", 2, null, null);
+        WjPage<Group> teamGroupWjPage = wjAddressListService.listGroup(28042L, 1, 20, null, null);
+        System.out.println(JacksonUtil.objectToJson(teamGroupWjPage));
     }
 }
