@@ -26,11 +26,13 @@ public interface WjManageService {
      * 获取问卷详情
      * @link {https://wj.qq.com/docs/openapi/survey/get_survey}
      *
+     * 废弃原因：该接口存在大量历史遗留问题，存量可以继续使用，后续不再更新
      *
      * @param surveyId 问卷ID，示例值：292192
      * @return         问卷详情
      */
-    SurveyDetail getSurveyDetail(Long surveyId);
+    @Deprecated
+    SurveyDetailLegacy getSurveyDetailLegacy(Long surveyId);
 
     /**
      * 获取问卷的回答列表
@@ -45,6 +47,7 @@ public interface WjManageService {
 
     /**
      * 获取回答详情
+     * @link {https://wj.qq.com/docs/openapi/survey/get_answer}
      *
      * @param surveyId 问卷ID
      * @param answerId 答案ID

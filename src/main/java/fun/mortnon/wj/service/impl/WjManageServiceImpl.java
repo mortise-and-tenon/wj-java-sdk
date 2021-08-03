@@ -56,14 +56,14 @@ public class WjManageServiceImpl implements WjManageService {
     }
 
     @Override
-    public SurveyDetail getSurveyDetail(Long surveyId) {
+    public SurveyDetailLegacy getSurveyDetailLegacy(Long surveyId) {
         AssertUtils.nonNull(surveyId, ErrorCode.InvalidArgument, "问卷ID不能为空");
         AssertUtils.isTrue(surveyId > 0, ErrorCode.InvalidArgument, "不合法的问卷ID：" + surveyId);
         RequestContent requestContent = new RequestContent();
         requestContent.setUrl(String.format(WjApiConstants.SURVEY_LEGACY, surveyId));
 
-        WjBaseResponse<SurveyDetail> legacyResponse = wjService.doGetWithToken(requestContent, () ->
-                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<SurveyDetail>>() {}));
+        WjBaseResponse<SurveyDetailLegacy> legacyResponse = wjService.doGetWithToken(requestContent, () ->
+                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<SurveyDetailLegacy>>() {}));
         return legacyResponse.getData();
     }
 

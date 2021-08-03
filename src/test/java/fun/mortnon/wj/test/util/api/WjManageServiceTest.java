@@ -1,7 +1,7 @@
 package fun.mortnon.wj.test.util.api;
 
 import fun.mortnon.wj.model.Survey;
-import fun.mortnon.wj.model.SurveyDetail;
+import fun.mortnon.wj.model.SurveyDetailLegacy;
 import fun.mortnon.wj.model.WjPage;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjManageService;
@@ -46,8 +46,8 @@ public class WjManageServiceTest {
     @Test
     public void testGetSurveyDetail() {
         WjManageService wjManageService = wjService.getWjManageService();
-        SurveyDetail surveyDetail = wjManageService.getSurveyDetail(8827032L);
+        SurveyDetailLegacy surveyDetailLegacy = wjManageService.getSurveyDetailLegacy(8827032L);
 
-        System.out.println("输出结果：" + JacksonUtil.objectToJson(surveyDetail));
+        System.out.println("输出结果：" + JacksonUtil.objectToJson(surveyDetailLegacy));
     }
 }
