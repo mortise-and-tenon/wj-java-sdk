@@ -53,5 +53,5 @@ public interface WjManageService {
      * @param answerId 答案ID
      * @return         回答详情
      */
-    AnswerDetail getAnswerDetail(Long surveyId, Long answerId);
+    Answer getAnswer(Long surveyId, Long answerId);
 }
