@@ -75,12 +75,22 @@ public interface WjAddressListService {
      * 修改分组
      * @link {https://wj.qq.com/docs/openapi/contact/group/update_group}
      *
-     * @param teamId
-     * @param groupId
-     * @param name
-     * @param order
-     * @param fromId
-     * @param toId
+     * @param teamId  企业ID
+     * @param groupId 分组ID
+     * @param name    分组名称
+     * @param order   排序
+     * @param fromId  原来所属的分组ID
+     * @param toId    移动到新的分组下（移动分组时使用）
      */
     void updateGroup(Long teamId, Long groupId, String name, Integer order, Long fromId, Long toId);
+
+    /**
+     * 删除分组
+     * @link {https://wj.qq.com/docs/openapi/contact/group/delete_group}
+     *
+     * @param teamId   企业ID
+     * @param groupIds 分组id列表
+     * @return         删除的分组id
+     */
+    void deleteGroup(Long teamId, List<Long> groupIds);
 }

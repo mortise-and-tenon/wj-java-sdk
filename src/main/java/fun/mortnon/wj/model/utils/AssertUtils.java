@@ -4,6 +4,7 @@ import fun.mortnon.wj.exception.WjException;
 import fun.mortnon.wj.model.Error;
 import fun.mortnon.wj.model.ErrorCode;
 
+import java.util.Collection;
 import java.util.Objects;
 
 /**
@@ -37,6 +38,17 @@ public class AssertUtils {
      */
     public static void notBlank(String src, ErrorCode errorCode, String message) {
         isTrue(Objects.nonNull(src) && src.length() > 0, errorCode, message);
+    }
+
+    /**
+     * 断言集合非空
+     *
+     * @param collection 集合
+     * @param errorCode  错误码
+     * @param message    错误消息
+     */
+    public static void notEmpty(Collection<?> collection, ErrorCode errorCode, String message) {
+        isTrue(Objects.nonNull(collection) && collection.size() > 0, errorCode, message);
     }
 
     /**

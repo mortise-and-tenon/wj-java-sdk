@@ -50,7 +50,7 @@ public class WjApiConstants {
     public final static String UPDATE_GROUP = "/api/contacts/teams/%s/groups/%s";
 
     /** 删除分组 */
-    public final static String BATCHE_DELETE_GROUP = "/api/contacts/teams/%s/groups/batch_delete";
+    public final static String BATCH_DELETE_GROUP = "/api/contacts/teams/%s/groups/batch_delete";
 
 
 

@@ -68,13 +68,23 @@ public class WjAddressListServiceTest {
 
     @Test
     public void testCreateGroup() {
-        CreateGroupResult testGroup = wjAddressListService.createGroup("测试分组", 0L, 1, "1234", 28042L);
+        CreateGroupResult testGroup = wjAddressListService.createGroup("测试分组", 0L, 1, "12345", 28042L);
         System.out.println(JacksonUtil.objectToJson(testGroup));
     }
 
     @Test
     public void testUpdateGroup() {
         wjAddressListService.updateGroup(28042L, 948153L, "测试分组2", 2, null, null);
+        WjPage<Group> teamGroupWjPage = wjAddressListService.listGroup(28042L, 1, 20, null, null);
+        System.out.println(JacksonUtil.objectToJson(teamGroupWjPage));
+    }
+
+    @Test
+    public void testDeleteGroup() {
+        List<Long> ids = new ArrayList<>();
+        ids.add(948153L);
+        ids.add(948216L);
+        wjAddressListService.deleteGroup(28042L, ids);
         WjPage<Group> teamGroupWjPage = wjAddressListService.listGroup(28042L, 1, 20, null, null);
         System.out.println(JacksonUtil.objectToJson(teamGroupWjPage));
     }

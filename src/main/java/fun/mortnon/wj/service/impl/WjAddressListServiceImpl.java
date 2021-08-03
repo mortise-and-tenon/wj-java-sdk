@@ -21,7 +21,9 @@ import java.util.Objects;
  */
 public class WjAddressListServiceImpl implements WjAddressListService {
 
-    /** 基础服务*/
+    /**
+     * 基础服务
+     */
     private final WjService wjService;
 
     public WjAddressListServiceImpl(WjService wjService) {
@@ -141,6 +143,19 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         }
 
         RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.UPDATE_GROUP, teamId, groupId))
+                .setFormBody(formBody);
+
+        wjService.doPostWithToken(requestContent, () -> null);
+    }
+
+    @Override
+    public void deleteGroup(Long teamId, List<Long> groupIds) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.notEmpty(groupIds, ErrorCode.InvalidArgument, "分组id列表不能为空");
+        Map<String, Object> formBody = new HashMap<>();
+        formBody.put("group_ids", JacksonUtil.objectToJson(groupIds));
+
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.BATCH_DELETE_GROUP, teamId))
                 .setFormBody(formBody);
 
         wjService.doPostWithToken(requestContent, () -> null);
