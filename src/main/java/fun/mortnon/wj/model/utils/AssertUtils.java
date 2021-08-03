@@ -29,6 +29,17 @@ public class AssertUtils {
     }
 
     /**
+     * 断言字符串非空
+     *
+     * @param src       字符串
+     * @param errorCode 错误码
+     * @param message   错误消息
+     */
+    public static void notBlank(String src, ErrorCode errorCode, String message) {
+        isTrue(Objects.nonNull(src) && src.length() > 0, errorCode, message);
+    }
+
+    /**
      * 断言表达式是否为空
      *
      * @param expression 表达式

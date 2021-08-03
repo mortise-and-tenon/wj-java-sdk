@@ -7,6 +7,7 @@ import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjAddressListService;
 import fun.mortnon.wj.service.WjService;
+import fun.mortnon.wj.vo.CreateTeamGroupResult;
 import fun.mortnon.wj.vo.WjBaseResponse;
 
 import java.util.HashMap;
@@ -50,7 +51,7 @@ public class WjAddressListServiceImpl implements WjAddressListService {
 
         Map<String, Object> params = new HashMap<>();
 
-        if (Objects.nonNull(roles) || roles.size() > 0) {
+        if (Objects.nonNull(roles) && roles.size() > 0) {
             params.put("roles", roles);
         }
         params.put("page", page);
@@ -59,7 +60,7 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         RequestContent requestContent = new RequestContent()
                 .setUrl(String.format(WjApiConstants.LIST_ORG_USERS, orgId.toString()))
                 .setParam(params);
-        WjBaseResponse<WjPage<OrgUser>> orgWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
+        WjBaseResponse<WjPage<OrgUser>> orgWjBaseResponse = wjService.doGetWithToken(requestContent, () ->
                 JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<WjPage<OrgUser>>>() {
                 }));
         return orgWjBaseResponse.getData();
@@ -72,7 +73,7 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         AssertUtils.nonNull(perPage, ErrorCode.InvalidArgument, "每页数量不能为空");
 
         Map<String, Object> params = new HashMap<>();
-        if (Objects.nonNull(remoteIds) || remoteIds.size() > 0) {
+        if (Objects.nonNull(remoteIds) && remoteIds.size() > 0) {
             params.put("remote_ids", remoteIds);
         }
 
@@ -88,5 +89,34 @@ public class WjAddressListServiceImpl implements WjAddressListService {
                 JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<WjPage<TeamGroup>>>() {
                 }));
         return response.getData();
+    }
+
+    @Override
+    public CreateTeamGroupResult createTeamGroup(String name, Long parentId, Integer order, String remoteId, Long teamId) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.notBlank(name, ErrorCode.InvalidArgument, "分组名称不能为空");
+
+        Map<String, Object> formBody = new HashMap<>();
+        formBody.put("name", name);
+
+        if (Objects.nonNull(parentId)) {
+            formBody.put("parent_id", parentId);
+        }
+
+        if (Objects.nonNull(order)) {
+            formBody.put("order", order);
+        }
+
+        if (Objects.nonNull(order)) {
+            formBody.put("remote_id", remoteId);
+        }
+
+
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.CREATE_TEAM_GROUP, teamId))
+                .setFormBody(formBody);
+        WjBaseResponse<CreateTeamGroupResult> createTeamGroupResultWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
+                JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<CreateTeamGroupResult>>() {
+                }));
+        return createTeamGroupResultWjBaseResponse.getData();
     }
 }

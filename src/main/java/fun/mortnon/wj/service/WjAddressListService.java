@@ -4,6 +4,7 @@ import fun.mortnon.wj.model.Org;
 import fun.mortnon.wj.model.OrgUser;
 import fun.mortnon.wj.model.TeamGroup;
 import fun.mortnon.wj.model.WjPage;
+import fun.mortnon.wj.vo.CreateTeamGroupResult;
 
 import java.util.List;
 
@@ -32,7 +33,7 @@ public interface WjAddressListService {
      * 功能：按角色获取企业管理员
      *
      * @param orgId   企业ID
-     * @param roles   获取角色
+     * @param roles   获取角色   0:企业创建者;2:企业管理员;3:问卷管理员，不填则无数据
      * @param page    页码
      * @param perPage 每页条数
      * @return        管理员信息
@@ -52,6 +53,20 @@ public interface WjAddressListService {
      * @return          分组列表
      */
     WjPage<TeamGroup> listTeamGroup(Long teamId, Integer page, Integer perPage, List<String> remoteIds, Long parentId);
+
+
+    /**
+     * @link {https://wj.qq.com/docs/openapi/contact/group/create_group}
+     * 新建分组
+     *
+     * @param name     分组名称
+     * @param parentId 上级分组ID
+     * @param order    排序
+     * @param remoteId 第三方系统的分组ID，用于关联
+     * @param teamId   企业ID
+     * @return         创建分组结果
+     */
+    CreateTeamGroupResult createTeamGroup(String name, Long parentId, Integer order, String remoteId, Long teamId);
 
     // 成员
 }

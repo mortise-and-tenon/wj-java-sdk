@@ -11,7 +11,6 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
-import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -86,12 +85,11 @@ public class HttpClientTemplate {
             AssertUtils.nonNull(httpEntity, ErrorCode.RemoteServerError, "远端服务器未返回消息");
             AssertUtils.nonNull(response, ErrorCode.RemoteServerError, "远端服务器未返回消息");
             AssertUtils.nonNull(response.getStatusLine(), ErrorCode.RemoteServerError, "远端服务器未返回消息");
-            AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
-
             String result = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
 
-            log.info("调用地址：「{}」正常，返回结果：「{}」", url, result);
+            log.info("GET 调用地址：「{}」，返回结果：「{}」", url, result);
 
+            AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
             requestContent.setResult(result);
 
             WjBaseResponse baseResponse = JacksonUtil.jsonToObject(result, WjBaseResponse.class);
@@ -103,10 +101,10 @@ public class HttpClientTemplate {
             log.info("处理响应体耗时：{}ms", System.currentTimeMillis() - handleTime);
             return wjBaseResponse;
         } catch (WjException e) {
-            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            log.error("GET 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            log.error("GET 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw new WjException(ErrorCode.RemoteServerError, null, e.getMessage());
         } finally {
             long closeTime = System.currentTimeMillis();
@@ -119,11 +117,11 @@ public class HttpClientTemplate {
                     response.close();
                 }
             } catch (IOException e) {
-                log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+                log.error("GET 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             }
             log.info("关闭请求耗时：{}ms", System.currentTimeMillis() - closeTime);
 
-            log.info("调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
+            log.info("GET 调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
         }
     }
 
@@ -145,7 +143,7 @@ public class HttpClientTemplate {
         CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
 
         log.info("创建httpClient耗时：{}ms", System.currentTimeMillis() - timeClient);
-        HttpPost httpPost = new HttpPost();
+        HttpPost httpPost = new HttpPost(url);
 
         Map<String, Object> formBody = requestContent.getFormBody();
         if (Objects.nonNull(formBody) && formBody.size() > 0) {
@@ -170,11 +168,13 @@ public class HttpClientTemplate {
             AssertUtils.nonNull(httpEntity, ErrorCode.RemoteServerError, "远端服务器未返回消息");
             AssertUtils.nonNull(response, ErrorCode.RemoteServerError, "远端服务器未返回消息");
             AssertUtils.nonNull(response.getStatusLine(), ErrorCode.RemoteServerError, "远端服务器未返回消息");
-            AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
 
             String result = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
 
-            log.info("调用地址：「{}」正常，返回结果：「{}」", url, result);
+            log.info("POST 调用地址：「{}」，返回结果：「{}」", url, result);
+
+            AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
+
 
             requestContent.setResult(result);
 
@@ -187,10 +187,10 @@ public class HttpClientTemplate {
             log.info("处理响应体耗时：{}ms", System.currentTimeMillis() - handleTime);
             return wjBaseResponse;
         } catch (WjException e) {
-            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            log.error("POST 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw e;
         } catch (Exception e) {
-            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            log.error("POST 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             throw new WjException(ErrorCode.RemoteServerError, null, e.getMessage());
         } finally {
             long closeTime = System.currentTimeMillis();
@@ -203,11 +203,11 @@ public class HttpClientTemplate {
                     response.close();
                 }
             } catch (IOException e) {
-                log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+                log.error("POST 调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
             }
             log.info("关闭请求耗时：{}ms", System.currentTimeMillis() - closeTime);
 
-            log.info("调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
+            log.info("POST 调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
         }
     }
 
@@ -226,10 +226,19 @@ public class HttpClientTemplate {
         StringBuilder sb = new StringBuilder(url);
         sb.append("?");
         params.forEach((key, value) -> {
-            sb.append(key);
-            sb.append("=");
-            sb.append(value);
-            sb.append("&");
+            if (value instanceof List) {
+                for (Object obj : (List) value) {
+                    sb.append(key);
+                    sb.append("[]=");
+                    sb.append(obj);
+                    sb.append("&");
+                }
+            } else {
+                sb.append(key);
+                sb.append("=");
+                sb.append(value);
+                sb.append("&");
+            }
         });
 
         // 去掉最后一位&

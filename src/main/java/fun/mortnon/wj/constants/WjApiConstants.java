@@ -32,13 +32,18 @@ public class WjApiConstants {
     public final static String SURVEY_ANSWERS_LEGACY = "/api/surveys/%s/answers/%s";
 
     // 团队通讯录管理
+    // 企业
     /** 获取企业信息 */
     public final static String GET_ORG = "/api/orgs/%s";
 
     /** 获取企业管理员列表 */
     public final static String LIST_ORG_USERS = "/api/orgs/%s/users";
 
+    // 分组
     /** 获取分组列表 */
     public final static String LIST_GROUP = "/api/contacts/teams/%s/groups";
+
+    /** 新建分组 */
+    public final static String CREATE_TEAM_GROUP = "/api/contacts/teams/%s/groups";
 
 }
