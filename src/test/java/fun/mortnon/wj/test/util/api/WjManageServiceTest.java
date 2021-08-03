@@ -15,6 +15,8 @@ import static fun.mortnon.wj.test.util.WjTestConst.APP_ID;
 import static fun.mortnon.wj.test.util.WjTestConst.SECRET;
 
 /**
+ * 问卷管理单元测试
+ *
  * @author dongfangzan
  * @date 3.8.21 8:28 上午
  */

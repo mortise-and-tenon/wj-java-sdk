@@ -36,7 +36,7 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         RequestContent requestContent = new RequestContent()
                 .setUrl(String.format(WjApiConstants.GET_ORG, id.toString()));
 
-        WjBaseResponse<Org> orgWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
+        WjBaseResponse<Org> orgWjBaseResponse = wjService.doGetWithToken(requestContent, () ->
                 JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<Org>>() {
                 }));
         return orgWjBaseResponse.getData();

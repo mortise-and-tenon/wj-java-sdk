@@ -1,8 +1,8 @@
 package fun.mortnon.wj.test.util.api;
 
-import fun.mortnon.wj.exception.WjException;
-import fun.mortnon.wj.model.AccessToken;
+import fun.mortnon.wj.model.Org;
 import fun.mortnon.wj.model.utils.JacksonUtil;
+import fun.mortnon.wj.service.WjAddressListService;
 import fun.mortnon.wj.service.WjService;
 import fun.mortnon.wj.service.WjStorageConfig;
 import fun.mortnon.wj.service.impl.WjDefaultStorageConfigImpl;
@@ -15,30 +15,29 @@ import static fun.mortnon.wj.test.util.WjTestConst.APP_ID;
 import static fun.mortnon.wj.test.util.WjTestConst.SECRET;
 
 /**
- * 问卷基础服务测试
+ * 团队通讯录管理测试用例
  *
  * @author dongfangzan
- * @date 27.7.21 10:20 上午
+ * @date 3.8.21 11:09 上午
  */
-public class WjApiTest {
-
+public class WjAddressListServiceTest {
     /** 问卷基础服务 */
     private WjService wjService;
+
+    private WjAddressListService wjAddressListService;
 
     @Before
     public void init() {
         WjStorageConfig wjStorageConfig = new WjDefaultStorageConfigImpl();
         wjService = new WjServiceImpl(wjStorageConfig, APP_ID, SECRET);
+        wjAddressListService = wjService.getWjAddressListService();
     }
 
+    @Test
+    public void testGetOrg() {
+        Org org = wjAddressListService.getOrg(60005907214L);
+        System.out.println(JacksonUtil.objectToJson(org));
 
-
-    @Test()
-    public void testAccessToken() throws WjException {
-        AccessToken accessToken = wjService.accessToken(APP_ID, SECRET, null);
-        System.out.println(JacksonUtil.objectToJson(accessToken));
-
-        Assert.assertNotNull(accessToken);
-        Assert.assertNotNull(accessToken.getToken());
+        Assert.assertNotNull(org);
     }
 }

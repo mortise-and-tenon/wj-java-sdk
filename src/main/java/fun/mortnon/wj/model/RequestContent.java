@@ -23,6 +23,15 @@ public class RequestContent {
     /** 请求参数 */
     private Map<String, Object> param;
 
+    /** 请求体 */
+    private Map<String, Object> formBody;
+
     /** 结果 */
     private String result;
+
+    public RequestContent(String url, Map<String, Object> param, String result) {
+        this.url = url;
+        this.param = param;
+        this.result = result;
+    }
 }

@@ -6,19 +6,26 @@ import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.vo.WjBaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * @author dongfangzan
@@ -120,9 +127,88 @@ public class HttpClientTemplate {
         }
     }
 
+    /**
+     * post 请求
+     *
+     * @param requestContent
+     * @param handler
+     * @param <T>
+     * @return
+     */
     public static <T> WjBaseResponse<T> doPost(RequestContent requestContent, Supplier<? extends WjBaseResponse<T>> handler) {
+        long time = System.currentTimeMillis();
+        Map<String, Object> params = requestContent.getParam();
 
-        return handler.get();
+        String url = buildGetUrlWithParams(requestContent.getUrl(), params);
+
+        long timeClient = System.currentTimeMillis();
+        CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
+
+        log.info("创建httpClient耗时：{}ms", System.currentTimeMillis() - timeClient);
+        HttpPost httpPost = new HttpPost();
+
+        Map<String, Object> formBody = requestContent.getFormBody();
+        if (Objects.nonNull(formBody) && formBody.size() > 0) {
+            List<BasicNameValuePair> list = formBody.entrySet().stream().filter(entry -> Objects.nonNull(entry.getValue()))
+                    .map(entry -> new BasicNameValuePair(entry.getKey(), entry.getValue().toString()))
+                    .collect(Collectors.toList());
+            try {
+                UrlEncodedFormEntity formEntity = new UrlEncodedFormEntity(list, "UTF-8");
+                httpPost.setEntity(formEntity);
+            } catch (UnsupportedEncodingException e) {
+                // 不用做任何事情，不会出现异常
+            }
+        }
+        CloseableHttpResponse response = null;
+        try {
+            long execTime = System.currentTimeMillis();
+            response = closeableHttpClient.execute(httpPost);
+            log.info("调用耗时：{}ms", System.currentTimeMillis() - execTime);
+
+            HttpEntity httpEntity = response.getEntity();
+
+            AssertUtils.nonNull(httpEntity, ErrorCode.RemoteServerError, "远端服务器未返回消息");
+            AssertUtils.nonNull(response, ErrorCode.RemoteServerError, "远端服务器未返回消息");
+            AssertUtils.nonNull(response.getStatusLine(), ErrorCode.RemoteServerError, "远端服务器未返回消息");
+            AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
+
+            String result = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
+
+            log.info("调用地址：「{}」正常，返回结果：「{}」", url, result);
+
+            requestContent.setResult(result);
+
+            WjBaseResponse baseResponse = JacksonUtil.jsonToObject(result, WjBaseResponse.class);
+            AssertUtils.nonNull(baseResponse, ErrorCode.RemoteServerError, "远端服务器未返回消息");
+            AssertUtils.isEquals(ErrorCode.OK, baseResponse.getCode(), baseResponse.getCode(), baseResponse.getError(), baseResponse.getCode().getDesc());
+
+            long handleTime = System.currentTimeMillis();
+            WjBaseResponse wjBaseResponse = handler.get();
+            log.info("处理响应体耗时：{}ms", System.currentTimeMillis() - handleTime);
+            return wjBaseResponse;
+        } catch (WjException e) {
+            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            throw e;
+        } catch (Exception e) {
+            log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            throw new WjException(ErrorCode.RemoteServerError, null, e.getMessage());
+        } finally {
+            long closeTime = System.currentTimeMillis();
+            try {
+                // 释放资源
+                if (closeableHttpClient != null) {
+                    closeableHttpClient.close();
+                }
+                if (response != null) {
+                    response.close();
+                }
+            } catch (IOException e) {
+                log.error("调用地址：「{}」发生错误，错误原因：「{}」", url, e.getMessage());
+            }
+            log.info("关闭请求耗时：{}ms", System.currentTimeMillis() - closeTime);
+
+            log.info("调用地址：「{}」完成，总耗时{}ms", url, System.currentTimeMillis() - time);
+        }
     }
 
     /**
