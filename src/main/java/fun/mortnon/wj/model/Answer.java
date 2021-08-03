@@ -44,12 +44,6 @@ public class Answer implements Serializable {
     /** 用户回答的分数（默认null）（暂不提供） */
     private Long score;
 
-    /** 企业微信用户信息（特定使用）*/
-
-    /** 智慧校园用户信息（特定使用）*/
-
-    /** 微校用户信息（特定使用）*/
-
     /** 用户的回答详情 */
     private List<AnswerDetail> answer;
 }

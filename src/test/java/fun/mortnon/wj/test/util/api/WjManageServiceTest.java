@@ -1,5 +1,6 @@
 package fun.mortnon.wj.test.util.api;
 
+import fun.mortnon.wj.model.Answer;
 import fun.mortnon.wj.model.Survey;
 import fun.mortnon.wj.model.SurveyDetailLegacy;
 import fun.mortnon.wj.model.WjPage;
@@ -48,6 +49,17 @@ public class WjManageServiceTest {
         WjManageService wjManageService = wjService.getWjManageService();
         SurveyDetailLegacy surveyDetailLegacy = wjManageService.getSurveyDetailLegacy(8827032L);
 
+        Assert.assertNotNull(surveyDetailLegacy);
         System.out.println("输出结果：" + JacksonUtil.objectToJson(surveyDetailLegacy));
     }
+
+    @Test
+    public void testListAnswer() {
+        WjManageService wjManageService = wjService.getWjManageService();
+        WjPage<Answer> answerWjPage = wjManageService.listAnswer(8827032L, 10, null);
+
+        System.out.println("输出结果：" + JacksonUtil.objectToJson(answerWjPage));
+    }
+
+
 }
