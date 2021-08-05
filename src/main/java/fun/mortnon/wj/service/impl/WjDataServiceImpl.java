@@ -65,7 +65,7 @@ public class WjDataServiceImpl implements WjDataService {
 
         RequestContent requestContent = new RequestContent()
                 .setUrl(String.format(WjApiConstants.CREATE_WEBHOOK, surveyId.toString()))
-                .setFormBody(body);
+                .setJsonBody(JacksonUtil.objectToJson(body));
 
         WjBaseResponse<Webhook> webhookWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
                 JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<Webhook>>() {
@@ -84,8 +84,8 @@ public class WjDataServiceImpl implements WjDataService {
         body.put("is_active", isActive);
 
         RequestContent requestContent = new RequestContent()
-                .setUrl(String.format(WjApiConstants.DELETE_WEBHOOK, surveyId.toString(), webhookId))
-                .setFormBody(body);
+                .setUrl(String.format(WjApiConstants.MODIFY_WEBHOOK, surveyId.toString(), webhookId))
+                .setJsonBody(JacksonUtil.objectToJson(body));
 
         WjBaseResponse<Webhook> webhookWjBaseResponse = wjService.doPostWithToken(requestContent, () ->
                 JacksonUtil.jsonToObject(requestContent.getResult(), new TypeReference<WjBaseResponse<Webhook>>() {

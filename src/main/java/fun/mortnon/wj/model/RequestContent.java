@@ -26,6 +26,11 @@ public class RequestContent {
     /** 请求体 */
     private Map<String, Object> formBody;
 
+    /**
+     * json格式请求体
+     */
+    private String jsonBody;
+
     /** 结果 */
     private String result;
 

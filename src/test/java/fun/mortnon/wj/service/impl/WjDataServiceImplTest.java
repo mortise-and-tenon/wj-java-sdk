@@ -46,21 +46,21 @@ public class WjDataServiceImplTest {
 
     @Test
     public void testCreateWebhook() {
-        Webhook webhook = wjDataService.createWebhook(8827032L, "https://mortnoon.fun", true);
+        Webhook webhook = wjDataService.createWebhook(8806096L, "http://zq4kis.natappfree.cc/api/wj/webhook3", true);
         Assert.assertNotNull(webhook);
         System.out.println(JacksonUtil.objectToJson(webhook));
     }
 
     @Test
     public void testModifyWebhook() {
-        Webhook webhook = wjDataService.modifyWebhook(8827032L, 0L, "http://mortnoon.fun", false);
+        Webhook webhook = wjDataService.modifyWebhook(8806096L, 4356498L, "http://zq4kis.natappfree.cc/api/wj/webhook5", false);
         Assert.assertNotNull(webhook);
         System.out.println(JacksonUtil.objectToJson(webhook));
     }
 
     @Test
     public void testDeleteWebhook() {
-        boolean b = wjDataService.deleteWebhook(8827032L, 0L);
+        boolean b = wjDataService.deleteWebhook(8806096L, 4336147L);
         Assert.assertTrue(b);
     }
 }
