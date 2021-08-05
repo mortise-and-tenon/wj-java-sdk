@@ -98,6 +98,8 @@ public class WjServiceImpl implements WjService {
         params.put("appid", appId);
         params.put("access_token", getAccessToken());
 
+        requestContent.setParam(params);
+
         return doDelete(requestContent, handler);
     }
 

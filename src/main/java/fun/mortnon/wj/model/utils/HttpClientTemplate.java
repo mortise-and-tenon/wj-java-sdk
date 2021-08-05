@@ -7,11 +7,9 @@ import fun.mortnon.wj.vo.WjBaseResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.CloseableHttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.*;
 import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -20,6 +18,7 @@ import org.apache.http.util.EntityUtils;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -70,6 +69,12 @@ public class HttpClientTemplate {
                 httpPost.setEntity(formEntity);
             } catch (UnsupportedEncodingException e) {
                 // 不用做任何事情，不会出现异常
+            }
+        } else {
+            String jsonBody = requestContent.getJsonBody();
+            if (StringUtils.isNotBlank(jsonBody)) {
+                StringEntity stringEntity = new StringEntity(jsonBody, ContentType.APPLICATION_JSON);
+                httpPost.setEntity(stringEntity);
             }
         }
 
@@ -148,8 +153,6 @@ public class HttpClientTemplate {
     }
 
 
-
-
     /**
      * 执行delete请求
      *
@@ -169,7 +172,7 @@ public class HttpClientTemplate {
      * @param handler        结果处理器
      * @return               返回结果
      */
-    public static <T> WjBaseResponse<T> doDeleteWithToken(RequestContent requestContent, String token, Supplier<? extends  WjBaseResponse<T>> handler) {
+    public static <T> WjBaseResponse<T> doDeleteWithToken(RequestContent requestContent, String token, Supplier<? extends WjBaseResponse<T>> handler) {
         long time = System.currentTimeMillis();
         Map<String, Object> params = requestContent.getParam();
         if (StringUtils.isNotBlank(token)) {
@@ -187,14 +190,12 @@ public class HttpClientTemplate {
         CloseableHttpClient closeableHttpClient = HttpClientBuilder.create().build();
 
         log.info("创建httpClient耗时：{}ms", System.currentTimeMillis() - timeClient);
-        HttpGet httpGet = new HttpGet(url);
+        HttpDelete httpDelete = new HttpDelete(url);
 
         CloseableHttpResponse response = null;
         try {
-            httpGet.setHeader("Content-Type", ContentType.APPLICATION_JSON.getMimeType());
-
             long execTime = System.currentTimeMillis();
-            response = closeableHttpClient.execute(httpGet);
+            response = closeableHttpClient.execute(httpDelete);
             log.info("调用耗时：{}ms", System.currentTimeMillis() - execTime);
 
             HttpEntity httpEntity = response.getEntity();
