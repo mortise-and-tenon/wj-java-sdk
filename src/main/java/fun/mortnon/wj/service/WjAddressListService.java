@@ -1,9 +1,6 @@
 package fun.mortnon.wj.service;
 
-import fun.mortnon.wj.model.Org;
-import fun.mortnon.wj.model.OrgUser;
-import fun.mortnon.wj.model.Group;
-import fun.mortnon.wj.model.WjPage;
+import fun.mortnon.wj.model.*;
 import fun.mortnon.wj.vo.CreateGroupResult;
 
 import java.util.List;
@@ -55,7 +52,6 @@ public interface WjAddressListService {
      */
     WjPage<Group> listGroup(Long teamId, Integer page, Integer perPage, List<String> remoteIds, Long parentId);
 
-
     /**
      * 新建分组
      * @link {https://wj.qq.com/docs/openapi/contact/group/create_group}
@@ -68,8 +64,6 @@ public interface WjAddressListService {
      * @return         创建分组结果
      */
     CreateGroupResult createGroup(String name, Long parentId, Integer order, String remoteId, Long teamId);
-
-    // 成员
 
     /**
      * 修改分组
@@ -92,4 +86,67 @@ public interface WjAddressListService {
      * @param groupIds 分组id列表
      */
     void deleteGroup(Long teamId, List<Long> groupIds);
+
+    // 成员
+
+    /**
+     * 按团队获取成员列表
+     * @link {https://wj.qq.com/docs/openapi/contact/user/list_team_user}
+     *
+     * @param teamId  企业id
+     * @param page    当前页码
+     * @param perPage 每页显示条数
+     * @param roles   角色
+     * @return        团队成员
+     */
+    WjPage<TeamUser> listTeamUser(Long teamId, Integer page, Integer perPage, List<Long> roles);
+
+    /**
+     * 按分组获取成员列表
+     * @link {https://wj.qq.com/docs/openapi/contact/user/list_group_user}
+     *
+     * @param teamId  企业id
+     * @param groupId 分组id
+     * @param page    当前页码
+     * @param perPage 每页显示条数
+     * @param roles   角色
+     * @return        团队成员
+     */
+    WjPage<TeamUser> listGroupUser(Long teamId, Long groupId, Integer page, Integer perPage, List<Long> roles);
+
+    /**
+     * 添加分组成员
+     * 企业使用该接口前，需要提前获得用户的 user_id，有两种方法:
+     * 方法1： 从通讯录页面邀请成员加入企业后，通过获取成员列表 获得 user_id
+     * 方法2： 使用注册用户创建一个第三方账号，获得 user_id
+     * @link {https://wj.qq.com/docs/openapi/contact/user/create_user}
+     *
+     * @param teamId  企业ID
+     * @param groupId 分组ID
+     * @param userId  用户ID
+     * @param openId  用户在第三方平台的唯一标识
+     */
+    void createUser(Long teamId, Long groupId, Long userId, String openId);
+
+    /**
+     * 修改成员
+     * @link {https://wj.qq.com/docs/openapi/contact/user/update_user}
+     *
+     * @param teamId   团队ID
+     * @param userId  用户ID
+     * @param groupIds 分组ID
+     * @param role     角色，受企业可用人数限制
+     * @param openId   用户在第三方平台的唯一标识
+     */
+    void updateUser(Long teamId, Long userId, List<Long> groupIds, Long role, String openId);
+
+    /**
+     * 删除用户
+     * @link {https://wj.qq.com/docs/openapi/contact/user/delete_user}
+     *
+     * @param teamId  企业ID
+     * @param groupId 分组ID
+     * @param userId  用户ID
+     */
+    void deleteUser(Long teamId, Long groupId, Long userId);
 }

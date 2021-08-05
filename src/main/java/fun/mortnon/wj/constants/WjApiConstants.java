@@ -52,7 +52,21 @@ public class WjApiConstants {
     /** 删除分组 */
     public final static String BATCH_DELETE_GROUP = "/api/contacts/teams/%s/groups/batch_delete";
 
+    // 成员
+    /** 按团队获取成员列表 */
+    public final static String LIST_TEAM_USER = "/api/contacts/teams/%s/users";
 
+    /** 按分组获取成员列表 */
+    public final static String LIST_GROUP_USER = "/api/contacts/teams/%s/groups/%s/users";
+
+    /** 添加分组成员 */
+    public final static String CREATE_USER = "/api/contacts/teams/%s/groups/%s/users/%s";
+
+    /** 修改分组成员 */
+    public final static String UPDATE_USER = "/api/contacts/teams/%s/users/%s";
+
+    /** 删除分组成员*/
+    public final static String DELETE_USER = "/api/contacts/teams/%s/groups/%s/users/%s";
 
     //数据推送管理
     /**

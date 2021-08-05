@@ -5,6 +5,7 @@ import fun.mortnon.wj.constants.WjApiConstants;
 import fun.mortnon.wj.model.*;
 import fun.mortnon.wj.model.utils.AssertUtils;
 import fun.mortnon.wj.model.utils.JacksonUtil;
+import fun.mortnon.wj.model.utils.StringUtils;
 import fun.mortnon.wj.service.WjAddressListService;
 import fun.mortnon.wj.service.WjService;
 import fun.mortnon.wj.vo.CreateGroupResult;
@@ -158,6 +159,111 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.BATCH_DELETE_GROUP, teamId))
                 .setFormBody(formBody);
 
+        wjService.doPostWithToken(requestContent, () -> null);
+    }
+
+    @Override
+    public WjPage<TeamUser> listTeamUser(Long teamId, Integer page, Integer perPage, List<Long> roles) {
+        AssertUtils.nonNull(page, ErrorCode.InvalidArgument, "页码不能为空");
+        AssertUtils.nonNull(perPage, ErrorCode.InvalidArgument, "每页数量不能为空");
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("page", page);
+        params.put("per_page", perPage);
+
+        if (Objects.nonNull(roles) && roles.size() > 0) {
+            params.put("roles", roles);
+        }
+
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.LIST_TEAM_USER, teamId))
+                .setParam(params);
+        WjBaseResponse<WjPage<TeamUser>> wjPageWjBaseResponse = wjService
+                .doGetWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
+                        new TypeReference<WjBaseResponse<WjPage<TeamUser>>>() {
+                        }));
+
+        return wjPageWjBaseResponse.getData();
+    }
+
+    @Override
+    public WjPage<TeamUser> listGroupUser(Long teamId, Long groupId, Integer page, Integer perPage, List<Long> roles) {
+        AssertUtils.nonNull(page, ErrorCode.InvalidArgument, "页码不能为空");
+        AssertUtils.nonNull(perPage, ErrorCode.InvalidArgument, "每页数量不能为空");
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.nonNull(groupId, ErrorCode.InvalidArgument, "分组ID不能为空");
+
+        Map<String, Object> params = new HashMap<>(3);
+        params.put("page", page);
+        params.put("per_page", perPage);
+
+        if (Objects.nonNull(roles) && roles.size() > 0) {
+            params.put("roles", roles);
+        }
+
+        RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.LIST_GROUP_USER, teamId, groupId))
+                .setParam(params);
+        WjBaseResponse<WjPage<TeamUser>> wjPageWjBaseResponse = wjService
+                .doGetWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
+                        new TypeReference<WjBaseResponse<WjPage<TeamUser>>>() {
+                        }));
+
+        return wjPageWjBaseResponse.getData();
+    }
+
+    @Override
+    public void createUser(Long teamId, Long groupId, Long userId, String openId) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.nonNull(groupId, ErrorCode.InvalidArgument, "分组ID不能为空");
+        AssertUtils.nonNull(userId, ErrorCode.InvalidArgument, "用户ID不能为空");
+
+        Map<String, Object> formBody = new HashMap<>(1);
+
+        if (StringUtils.isNotBlank(openId)) {
+            formBody.put("open_id", openId);
+        }
+
+        RequestContent requestContent = new RequestContent()
+                .setUrl(String.format(WjApiConstants.CREATE_USER, teamId, groupId, userId))
+                .setFormBody(formBody);
+
+        wjService.doPostWithToken(requestContent, () -> null);
+    }
+
+    @Override
+    public void updateUser(Long teamId, Long userId, List<Long> groupIds, Long role, String openId) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.nonNull(userId, ErrorCode.InvalidArgument, "用户ID不能为空");
+
+        Map<String, Object> formBody = new HashMap<>(1);
+
+        if (Objects.nonNull(groupIds) && groupIds.size() > 0) {
+            formBody.put("group_ids", JacksonUtil.objectToJson(groupIds));
+        }
+
+        if (Objects.nonNull(role)) {
+            formBody.put("role", role);
+        }
+
+        if (StringUtils.isNotBlank(openId)) {
+            formBody.put("open_id", openId);
+        }
+
+        RequestContent requestContent = new RequestContent()
+                .setUrl(String.format(WjApiConstants.UPDATE_USER, teamId, userId))
+                .setFormBody(formBody);
+
+        wjService.doPostWithToken(requestContent, () -> null);
+    }
+
+    @Override
+    public void deleteUser(Long teamId, Long groupId, Long userId) {
+        AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
+        AssertUtils.nonNull(groupId, ErrorCode.InvalidArgument, "分组ID不能为空");
+        AssertUtils.nonNull(userId, ErrorCode.InvalidArgument, "用户ID不能为空");
+
+        RequestContent requestContent = new RequestContent()
+                .setUrl(String.format(WjApiConstants.DELETE_USER, teamId, groupId, userId));
         wjService.doPostWithToken(requestContent, () -> null);
     }
 }
