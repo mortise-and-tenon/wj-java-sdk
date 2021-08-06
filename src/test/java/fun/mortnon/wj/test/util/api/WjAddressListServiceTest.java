@@ -82,8 +82,7 @@ public class WjAddressListServiceTest {
     @Test
     public void testDeleteGroup() {
         List<Long> ids = new ArrayList<>();
-        ids.add(948153L);
-        ids.add(948216L);
+        ids.add(959219L);
         wjAddressListService.deleteGroup(28042L, ids);
         WjPage<Group> teamGroupWjPage = wjAddressListService.listGroup(28042L, 1, 20, null, null);
         System.out.println(JacksonUtil.objectToJson(teamGroupWjPage));

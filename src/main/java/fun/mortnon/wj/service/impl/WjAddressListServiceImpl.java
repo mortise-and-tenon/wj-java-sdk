@@ -154,10 +154,10 @@ public class WjAddressListServiceImpl implements WjAddressListService {
         AssertUtils.nonNull(teamId, ErrorCode.InvalidArgument, "企业ID不能为空");
         AssertUtils.notEmpty(groupIds, ErrorCode.InvalidArgument, "分组id列表不能为空");
         Map<String, Object> formBody = new HashMap<>();
-        formBody.put("group_ids", JacksonUtil.objectToJson(groupIds));
+        formBody.put("group_ids", groupIds);
 
         RequestContent requestContent = new RequestContent().setUrl(String.format(WjApiConstants.BATCH_DELETE_GROUP, teamId))
-                .setFormBody(formBody);
+                .setJsonBody(JacksonUtil.objectToJson(formBody));
 
         wjService.doPostWithToken(requestContent, () -> null);
     }

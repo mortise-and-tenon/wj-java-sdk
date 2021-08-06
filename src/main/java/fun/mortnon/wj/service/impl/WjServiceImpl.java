@@ -52,6 +52,10 @@ public class WjServiceImpl implements WjService {
     @Setter
     private WjDataService wjDataService = new WjDataServiceImpl(this);
 
+    @Getter
+    @Setter
+    private WjVendorService wjVendorService = new WjVendorServiceImpl(this);
+
     public WjServiceImpl(WjStorageConfig wjStorageConfig, String appId, String secret) {
         this.wjStorageConfig = wjStorageConfig;
         this.appId = appId;

@@ -94,4 +94,14 @@ public class WjApiConstants {
      */
     public final static String DELETE_WEBHOOK = GET_WEBHOOK;
 
+    // 第三方登录
+    // 相关接口
+    /** 注册用户 */
+    public final static String REGISTER_USER = "/api/sso/users";
+
+    /** 获取一次性登陆码 */
+    public final static String GET_LOGIN_CODE = "/api/sso/user/%s/code";
+
+    /** 获取用户信息 */
+    public final static String GET_USER = "/api/tp/users/%s";
 }
