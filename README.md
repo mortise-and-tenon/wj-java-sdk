@@ -6,8 +6,13 @@
 1. 首先需要申请企业版腾讯问卷
 2. 获取腾讯问卷颁发的appId和secret
 3. 引入jar包
+- `maven` 依赖：
 ```xml
-
+<dependency>
+  <groupId>fun.mortnon</groupId>
+  <artifactId>wj-java-sdk</artifactId>
+  <version>1.0.0</version>
+</dependency>
 ```
 4. 代码如下
 ```java
