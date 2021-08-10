@@ -6,7 +6,7 @@
 
     <groupId>fun.mortnon</groupId>
     <artifactId>wj-java-sdk</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 
     <name>${project.artifactId}</name>
     <url>https://gitee.com/mortise-and-tenon/wj-java-sdk</url>
