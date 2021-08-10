@@ -90,6 +90,12 @@ public interface WjService {
     WjDataService getWjDataService();
 
     /**
+     * 获取第三方登录服务
+     * @return
+     */
+    WjVendorService getWjVendorService();
+
+    /**
      * delete 请求
      *
      * @param requestContent 请求上下文
