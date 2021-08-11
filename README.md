@@ -28,3 +28,6 @@ WjPage<Survey> surveyWjPage = wjManageService.listSurvey(USER_ID, null, 1, 20);
     
 // 其他接口可自行查看
 ```
+
+### springboot接入
+鉴于大家常用springboot，我们提供了相应的springboot-starter来方便大家接入，详情可以查看[地址](https://gitee.com/mortise-and-tenon/wj-sdk-starter)
