@@ -11,7 +11,7 @@
 <dependency>
   <groupId>fun.mortnon</groupId>
   <artifactId>wj-java-sdk</artifactId>
-  <version>1.0.0</version>
+  <version>${最新发布版本}</version>
 </dependency>
 ```
 4. 代码如下
