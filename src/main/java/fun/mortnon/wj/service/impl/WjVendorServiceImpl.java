@@ -2,6 +2,8 @@ package fun.mortnon.wj.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import fun.mortnon.wj.constants.WjApiConstants;
+import fun.mortnon.wj.model.AuthUser;
+import fun.mortnon.wj.model.LoginCode;
 import fun.mortnon.wj.model.RequestContent;
 import fun.mortnon.wj.model.utils.JacksonUtil;
 import fun.mortnon.wj.service.WjService;
@@ -26,39 +28,41 @@ public class WjVendorServiceImpl implements WjVendorService {
 
     @Override
     public Long createUser(String openId, String nickname, String avatar) {
-        Map<String, Object> formBody = new HashMap<>(3);
-        formBody.put("openid", openId);
-        formBody.put("nickname", nickname);
-        formBody.put("avatar", avatar);
+        Map<String, Object> jsonMap = new HashMap<>(3);
+        jsonMap.put("openid", openId);
+        jsonMap.put("nickname", nickname);
+        jsonMap.put("avatar", avatar);
 
-        RequestContent requestContent = new RequestContent().setUrl(WjApiConstants.CREATE_USER)
-                .setFormBody(formBody);
+        RequestContent requestContent = new RequestContent().setUrl(WjApiConstants.REGISTER_USER)
+                .setJsonBody(JacksonUtil.objectToJson(jsonMap));
 
         return wjService.doPostWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
-                new TypeReference<WjBaseResponse<Long>>() {})).getData();
+                new TypeReference<WjBaseResponse<AuthUser>>() {})).getData().getUserId();
     }
 
     @Override
     public String getLoginCode(Long userId, String sceneType, String allowDomain) {
-        Map<String, String> jsonMap = new HashMap<>(2);
+        Map<String, Object> jsonMap = new HashMap<>(2);
         jsonMap.put("scene_type", sceneType);
-        jsonMap.put("allow_domain", allowDomain);
+        jsonMap.put("user_id",userId);
+        //官方文档已取消这个字段
+        //jsonMap.put("allow_domain", allowDomain);
 
         RequestContent requestContent = new RequestContent()
-                .setUrl(String.format(WjApiConstants.GET_LOGIN_CODE, userId.toString()))
+                .setUrl(WjApiConstants.GET_LOGIN_CODE)
                 .setJsonBody(JacksonUtil.objectToJson(jsonMap));
 
 
         return wjService.doPostWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
-                new TypeReference<WjBaseResponse<String>>() {})).getData();
+                new TypeReference<WjBaseResponse<LoginCode>>() {})).getData().getCode();
     }
 
     @Override
-    public Long getUser(String openId) {
+    public WjBaseResponse getUser(String openId) {
         RequestContent requestContent = new RequestContent()
                 .setUrl(String.format(WjApiConstants.GET_USER, openId));
 
-        return wjService.doPostWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
-                new TypeReference<WjBaseResponse<Long>>() {})).getData();
+        return wjService.doGetWithToken(requestContent, () -> JacksonUtil.jsonToObject(requestContent.getResult(),
+                new TypeReference<WjBaseResponse<AuthUser>>() {}));
     }
 }

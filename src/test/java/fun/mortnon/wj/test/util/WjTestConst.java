@@ -7,8 +7,8 @@ package fun.mortnon.wj.test.util;
 public class WjTestConst {
 
     /** 腾讯问卷分配的appid */
-    public static final String APP_ID = "";
+    public static final String APP_ID = "tpidFacl1zSq";
 
     /** 腾讯问卷分配的秘钥 */
-    public static final String SECRET = "";
+    public static final String SECRET = "JHGOJwaZ3ArnaEqRhd3pWWydGFouI28X";
 }

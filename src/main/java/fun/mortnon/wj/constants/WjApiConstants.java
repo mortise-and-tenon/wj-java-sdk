@@ -100,8 +100,8 @@ public class WjApiConstants {
     public final static String REGISTER_USER = "/api/sso/users";
 
     /** 获取一次性登陆码 */
-    public final static String GET_LOGIN_CODE = "/api/sso/user/%s/code";
+    public final static String GET_LOGIN_CODE = "/api/sso/code";
 
     /** 获取用户信息 */
-    public final static String GET_USER = "/api/tp/users/%s";
+    public final static String GET_USER = "/api/sso/users/%s";
 }

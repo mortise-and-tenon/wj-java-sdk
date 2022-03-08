@@ -115,13 +115,12 @@ public class HttpClientTemplate {
             String result = EntityUtils.toString(httpEntity, StandardCharsets.UTF_8);
 
             log.info("{} 调用地址：「{}」，返回结果：「{}」", request.getMethod(), url, result);
-
             AssertUtils.isEquals(response.getStatusLine().getStatusCode(), 200, ErrorCode.RemoteServerError, "远端服务器异常");
             requestContent.setResult(result);
 
             WjBaseResponse baseResponse = JacksonUtil.jsonToObject(result, WjBaseResponse.class);
             AssertUtils.nonNull(baseResponse, ErrorCode.RemoteServerError, "远端服务器未返回消息");
-            AssertUtils.isEquals(ErrorCode.OK, baseResponse.getCode(), baseResponse.getCode(), baseResponse.getError(), baseResponse.getCode().getDesc());
+            //AssertUtils.isEquals(ErrorCode.OK, baseResponse.getCode(), baseResponse.getCode(), baseResponse.getError(), baseResponse.getCode().getDesc());
 
             long handleTime = System.currentTimeMillis();
             WjBaseResponse wjBaseResponse = handler.get();
