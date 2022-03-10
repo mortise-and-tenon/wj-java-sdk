@@ -1,5 +1,7 @@
 package fun.mortnon.wj.service;
 
+import fun.mortnon.wj.vo.WjBaseResponse;
+
 /**
  * 第三方登录
  *
@@ -46,5 +48,5 @@ public interface WjVendorService {
      * @param openId 第三方用户标识，用于辨别来自该第三方应用/平台的用户
      * @return       问卷系统用户ID
      */
-    Long getUser(String openId);
+    WjBaseResponse getUser(String openId);
 }
